@@ -15,14 +15,12 @@ import interfaces.IPrototype;
 import interfaces.IRoda;
 import interfaces.ISom;
 import interfaces.ITeto;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import util.PluginLoader;
 
@@ -161,7 +159,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 9, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lblTipoCarro)
                         .addGap(228, 228, 228)
                         .addComponent(btnCriarCarro))
@@ -169,9 +167,9 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
                         .addComponent(lblTipoGaragem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboTipoCarro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboTipoGaragem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboTipoCarro, 0, 100, Short.MAX_VALUE)
+                            .addComponent(comboTipoGaragem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(113, 113, 113)
                         .addComponent(btnEstacionar))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,9 +253,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
             if(garagem != null) {
                 try {
                     garagem = garagem.getClass().newInstance();
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(AbstractFactoryCar.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
+                } catch (InstantiationException | IllegalAccessException ex) {
                     Logger.getLogger(AbstractFactoryCar.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -336,11 +332,11 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
         return this.modelListPrototypes;
     }
     
-    private void refreshFactory() {
+    private void refreshFactory(String path) {
         List<Class> listaFabricas = new ArrayList<>();
         List<Class> listaCreators = new ArrayList<>();
         PluginLoader pluginLoader = PluginLoader.getInstance();
-        List<String> listaAvisos = pluginLoader.pluginRefresh(selecionarDiretorio());
+        List<String> listaAvisos = pluginLoader.pluginRefresh(path);
         for (String listaAviso : listaAvisos) {
             append(listaAviso);
         }
@@ -368,7 +364,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
             qtdeCreator--;
         }
         append("Atualizando plugins...");
-        refreshFactory();
+        refreshFactory(selecionarDiretorio());
     }
     
     public Object create(String nome) {
@@ -403,12 +399,10 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {         
-                AbstractFactoryCar app = new AbstractFactoryCar();
-                app.setVisible(true);
-                app.refreshFactory();
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            AbstractFactoryCar app = new AbstractFactoryCar();
+            app.setVisible(true);
+            app.refreshFactory("./plugins");
         });
         
     }
