@@ -43,10 +43,10 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         btnRemoverUm = new javax.swing.JButton();
         btnRemoverTodos = new javax.swing.JButton();
-        btnAdicionarTodos = new javax.swing.JButton();
         btnAdicionarUm = new javax.swing.JButton();
         lblAdicionar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -60,6 +60,10 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnRemoverUm.setText("<");
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, btnRemoverUm, org.jdesktop.beansbinding.ELProperty.create("Remover selecionado"), btnRemoverUm, org.jdesktop.beansbinding.BeanProperty.create("toolTipText"));
+        bindingGroup.addBinding(binding);
+
         btnRemoverUm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverUmActionPerformed(evt);
@@ -67,20 +71,21 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
         });
 
         btnRemoverTodos.setText("<<");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, btnRemoverTodos, org.jdesktop.beansbinding.ELProperty.create("Remover todos"), btnRemoverTodos, org.jdesktop.beansbinding.BeanProperty.create("toolTipText"));
+        bindingGroup.addBinding(binding);
+
         btnRemoverTodos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverTodosActionPerformed(evt);
             }
         });
 
-        btnAdicionarTodos.setText(">>");
-        btnAdicionarTodos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdicionarTodosActionPerformed(evt);
-            }
-        });
-
         btnAdicionarUm.setText(">");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, btnAdicionarUm, org.jdesktop.beansbinding.ELProperty.create("Adicionar aos selecionados"), btnAdicionarUm, org.jdesktop.beansbinding.BeanProperty.create("toolTipText"));
+        bindingGroup.addBinding(binding);
+
         btnAdicionarUm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdicionarUmActionPerformed(evt);
@@ -90,6 +95,7 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
         lblAdicionar.setText("Adicionar tipos de produtos:");
 
         listaSelecionados.setModel(new DefaultComboBoxModel<>());
+        listaSelecionados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listaSelecionados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listaSelecionadosMouseClicked(evt);
@@ -98,6 +104,7 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
         jScrollPane1.setViewportView(listaSelecionados);
 
         listaPrototypes.setModel(new DefaultComboBoxModel<>());
+        listaPrototypes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listaPrototypes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listaPrototypesMouseClicked(evt);
@@ -137,8 +144,7 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(btnRemoverTodos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(btnAdicionarUm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btnRemoverUm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btnAdicionarTodos))
+                                            .addComponent(btnRemoverUm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGap(18, 18, 18)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblPrototypes1)
@@ -153,8 +159,8 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblAdicionar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(lblAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPrototypes)
                     .addComponent(lblPrototypes1))
@@ -162,11 +168,9 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnAdicionarUm)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAdicionarTodos)
-                        .addGap(38, 38, 38)
+                        .addGap(42, 42, 42)
                         .addComponent(btnRemoverUm)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(41, 41, 41)
                         .addComponent(btnRemoverTodos))
                     .addComponent(jScrollPane1)
                     .addComponent(jScrollPane2))
@@ -175,30 +179,26 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
                 .addGap(24, 24, 24))
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRemoverUmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverUmActionPerformed
-        removerSelecionados();
+        removerSelecionado();
     }//GEN-LAST:event_btnRemoverUmActionPerformed
 
     private void btnRemoverTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverTodosActionPerformed
         removerTodos();
     }//GEN-LAST:event_btnRemoverTodosActionPerformed
 
-    private void btnAdicionarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarTodosActionPerformed
-        adicionarTodos();
-    }//GEN-LAST:event_btnAdicionarTodosActionPerformed
-
     private void btnAdicionarUmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarUmActionPerformed
         abrirModal(this);
-        adicionarSelecionados();
     }//GEN-LAST:event_btnAdicionarUmActionPerformed
-
     private void listaPrototypesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaPrototypesMouseClicked
         if(evt.getButton() == 1) {
             if(evt.getClickCount() > 1) {
-                adicionarSelecionados();
+                adicionarSelecionado();
             }
         }
     }//GEN-LAST:event_listaPrototypesMouseClicked
@@ -206,7 +206,7 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
     private void listaSelecionadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaSelecionadosMouseClicked
         if(evt.getButton() == 1) {
             if(evt.getClickCount() > 1) {
-                removerSelecionados();
+                removerSelecionado();
             }
         }
     }//GEN-LAST:event_listaSelecionadosMouseClicked
@@ -217,18 +217,19 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCriarFabricaActionPerformed
     
     public void retornar(String nome) {
-        String nomeClasse = listaPrototypes.getSelectedValue();
-        String pacote = "prototypes";
-        IPrototype prototype = (IPrototype)PluginLoader.getInstance().carregarClasse(pacote, nomeClasse);
-        this.retorno.adicionar(nome, prototype);
-        modalMensagem.dispose();
+        if(nome != "") {
+            String nomeClasse = listaPrototypes.getSelectedValue();
+            String pacote = "prototypes";
+            IPrototype prototype = (IPrototype)PluginLoader.getInstance().carregarClasse(pacote, nomeClasse);
+            this.retorno.adicionar(nome, prototype);
+            modalMensagem.dispose();
+            adicionarSelecionado();
+        }
     }
     
     private void abrirModal(CreateFactoryPrototype host) {
-        if(modalMensagem == null) {
-            modalMensagem = new Mensagem(this, Boolean.TRUE);
-        }
-        modalMensagem.setMensagem("Informe o nome para o identificar o produto.");
+        modalMensagem = new Mensagem(this, Boolean.TRUE);
+        modalMensagem.setMensagem("Informe um nome para o produto:");
         modalMensagem.setVisible(Boolean.TRUE);
     }
     
@@ -245,16 +246,6 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
         this.setVisible(false);
     }
     
-    private void adicionarTodos() {
-        javax.swing.DefaultComboBoxModel<String> modelListPrototypes = (javax.swing.DefaultComboBoxModel<String>) listaPrototypes.getModel();
-        javax.swing.DefaultComboBoxModel<String> modelListSelecionados = (javax.swing.DefaultComboBoxModel<String>) listaSelecionados.getModel();
-        for(int i = 0; i < modelListPrototypes.getSize(); i++) {
-            String adicionar = modelListPrototypes.getElementAt(i);
-            modelListSelecionados.addElement(adicionar);
-        }
-        modelListPrototypes.removeAllElements();
-    }
-    
     private void removerTodos() {
         javax.swing.DefaultComboBoxModel<String> modelListPrototypes = (javax.swing.DefaultComboBoxModel<String>) listaPrototypes.getModel();
         javax.swing.DefaultComboBoxModel<String> modelListSelecionados = (javax.swing.DefaultComboBoxModel<String>) listaSelecionados.getModel();
@@ -265,38 +256,24 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
         modelListSelecionados.removeAllElements();
     }
     
-    private void adicionarSelecionados() {
-        int[] indices = listaPrototypes.getSelectedIndices();
+    private void adicionarSelecionado() {
+        int indice = listaPrototypes.getSelectedIndex();
         javax.swing.DefaultComboBoxModel<String> modelListSelecionados = (javax.swing.DefaultComboBoxModel<String>) listaSelecionados.getModel();
-        List<String> modelListRemoved = new ArrayList<>();
         javax.swing.DefaultComboBoxModel<String> modelListPrototypes = (javax.swing.DefaultComboBoxModel<String>) listaPrototypes.getModel();
-        
-        for (int i = 0; i < indices.length; i++) {
-                int index = indices[i];
-                String adicionar = modelListPrototypes.getElementAt(index);
-                modelListSelecionados.addElement(adicionar);
-                modelListRemoved.add(adicionar);
-        }
-        for (String remover: modelListRemoved) {
-            modelListPrototypes.removeElement(remover);
-        }
+        String selecionado = modelListPrototypes.getElementAt(indice);
+        modelListSelecionados.addElement(selecionado);
+        modelListPrototypes.removeElement(selecionado);
     }
     
-    private void removerSelecionados() {
-        int[] indices = listaSelecionados.getSelectedIndices();
+    private void removerSelecionado() {
+        int indice = listaSelecionados.getSelectedIndex();
         javax.swing.DefaultComboBoxModel<String> modelListSelecionados = (javax.swing.DefaultComboBoxModel<String>) listaSelecionados.getModel();
-        List<String> modelListRemoved = new ArrayList<>();
         javax.swing.DefaultComboBoxModel<String> modelListPrototypes = (javax.swing.DefaultComboBoxModel<String>) listaPrototypes.getModel();
-        
-        for (int i = 0; i < indices.length; i++) {
-                int index = indices[i];
-                String adicionar = modelListSelecionados.getElementAt(index);
-                modelListPrototypes.addElement(adicionar);
-                modelListRemoved.add(adicionar);
-        }
-        for (String remover: modelListRemoved) {
-            modelListSelecionados.removeElement(remover);
-        }
+        String selecionado = modelListSelecionados.getElementAt(indice);
+        modelListSelecionados.removeElement(selecionado);
+        modelListPrototypes.addElement(selecionado);
+        listaSelecionados.setSelectedIndex(-1);
+        listaSelecionados.setSelectedIndices(new int[0]);
     }
     
     /**
@@ -342,7 +319,6 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdicionarTodos;
     private javax.swing.JButton btnAdicionarUm;
     private javax.swing.JButton btnCriarFabrica;
     private javax.swing.JButton btnRemoverTodos;
@@ -354,5 +330,6 @@ public class CreateFactoryPrototype extends javax.swing.JFrame {
     private javax.swing.JLabel lblPrototypes1;
     private javax.swing.JList<String> listaPrototypes;
     private javax.swing.JList<String> listaSelecionados;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
