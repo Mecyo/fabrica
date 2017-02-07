@@ -11,17 +11,20 @@ import interfaces.Carro;
 import interfaces.ICarModelFactory;
 import interfaces.ICreator;
 import interfaces.IGaragem;
+import interfaces.IPrototype;
 import interfaces.IRoda;
 import interfaces.ISom;
 import interfaces.ITeto;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
+import util.PluginLoader;
 
 /**
  *
@@ -36,6 +39,10 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
     private IRoda roda;
     private ITeto teto;
     private Carro carro;
+    private IPrototype prototype;
+    private AbstractFactory abstractFactory;
+    private String[] modelListPrototypes;
+    private Map<String,IPrototype> listaPrototypes = null;
     /**
      * Creates new form AbstractFactoryCar
      */
@@ -52,6 +59,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        seletor = new javax.swing.JFileChooser();
         btnCriarCarro = new javax.swing.JButton();
         btnAbrirTeto = new javax.swing.JButton();
         lblTipoCarro = new javax.swing.JLabel();
@@ -64,6 +72,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
         btnEstacionar = new javax.swing.JButton();
         comboTipoGaragem = new javax.swing.JComboBox<>();
         lblTipoGaragem = new javax.swing.JLabel();
+        btnCriarPrototype = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -136,6 +145,13 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
 
         lblTipoGaragem.setText("Tipo de Garagem:");
 
+        btnCriarPrototype.setText("Criar Prototype");
+        btnCriarPrototype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCriarPrototypeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -150,23 +166,28 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
                         .addGap(228, 228, 228)
                         .addComponent(btnCriarCarro))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTipoGaragem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnRefresh)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTipoGaragem)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboTipoCarro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboTipoGaragem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(comboTipoCarro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboTipoGaragem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnEstacionar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(btnTocarSom)
-                        .addGap(58, 58, 58)
-                        .addComponent(btnAbrirTeto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAlinharRoda)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(btnTocarSom))
+                            .addComponent(btnRefresh))
+                        .addGap(49, 49, 49)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCriarPrototype)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAbrirTeto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAlinharRoda)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -182,7 +203,9 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnEstacionar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRefresh)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRefresh)
+                            .addComponent(btnCriarPrototype))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -239,7 +262,9 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
                 }
             }
         } else {
-            carModel = (ICarModelFactory)comboTipoCarro.getSelectedItem();
+            String nomeClasse = comboTipoCarro.getSelectedItem().toString();
+            String pacote = nomeClasse.toLowerCase();
+            carModel = (ICarModelFactory) PluginLoader.getInstance().carregarClasse(pacote, nomeClasse);
             habilitarDesabilitarBotoes(false);
             btnCriarCarro.setEnabled(true); 
         }  
@@ -247,6 +272,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
     }//GEN-LAST:event_comboTipoCarroActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        display.setText("");
         atualizarFactory();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
@@ -254,7 +280,9 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
         if(comboTipoGaragem.getSelectedItem().equals("SELECIONE")) {
             garagem = null;
         } else {
-            creator = (ICreator) comboTipoGaragem.getSelectedItem();
+            String nomeClasse = comboTipoGaragem.getSelectedItem().toString();
+            String pacote = nomeClasse.toLowerCase();
+            creator = (ICreator) PluginLoader.getInstance().carregarClasse(pacote, nomeClasse);
             garagem = (IGaragem) creator.criarGaragem(); 
             String nome = garagem.getClass().getName().split("\\.")[1];
             String sufixo = nome.split("Garagem")[1];
@@ -273,8 +301,27 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEstacionarActionPerformed
 
+    private void btnCriarPrototypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarPrototypeActionPerformed
+        this.setVisible(false);
+        CreateFactoryPrototype modalCreate = new CreateFactoryPrototype();
+        modalCreate.iniciar(this, this.abstractFactory);
+        modalCreate.setVisible(true);
+    }//GEN-LAST:event_btnCriarPrototypeActionPerformed
+
+    private String selecionarDiretorio() {
+        seletor.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
+        seletor.showOpenDialog(getParent());
+        return seletor.getSelectedFile().getAbsolutePath();
+    }
+    
     private void append(String texto) {
         display.append("\n" + texto);
+    }
+    
+    public void retornar(IPrototype prototype) {
+        this.prototype = prototype;
+        this.setVisible(true);
+        append("Novo Prototype criado com sucesso!");
     }
     
     private void habilitarDesabilitarBotoes(Boolean bool) {
@@ -285,79 +332,30 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
         btnEstacionar.setEnabled(bool);
     }
     
-    private void setModelSelectFactory(List<ICarModelFactory> lista) {
-        Object[] modelList = new Object[lista.size() + 1];
-        modelList[0] = "SELECIONE";
-        for (int i = 1; i <= lista.size(); i++) {
-            modelList[i] = (ICarModelFactory)lista.get(i-1);
-        }
-        comboTipoCarro.setModel(new javax.swing.DefaultComboBoxModel<>(modelList));
-    }
-    
-    private void setModelSelectCreator(List<ICreator> lista) {
-        Object[] modelList = new Object[lista.size() + 1];
-        modelList[0] = "SELECIONE";
-        for (int i = 1; i <= lista.size(); i++) {
-            modelList[i] = (ICreator)lista.get(i-1);
-        }
-        comboTipoGaragem.setModel(new javax.swing.DefaultComboBoxModel<>(modelList));
-    }
-    
-    private Boolean verificarNovosPlugins(int qtdePlugins) {
-        Boolean existe = Boolean.FALSE;
-        if(buscarListaPlugins().length > qtdePlugins) {
-            existe = Boolean.TRUE;
-        }                    
-        return existe;
-    }
-        
-    private String[] buscarListaPlugins() {
-        File currentDir = new File("./plugins");
-        String []plugins = currentDir.list();
-        return plugins;
+    public String[] getModelSelectPrototypes() {
+        return this.modelListPrototypes;
     }
     
     private void refreshFactory() {
-        String[] plugins = buscarListaPlugins();
-        URL[] jars = new URL[plugins.length];
-        List<String> listaFactory = new ArrayList<>();
-        int index = 0;
-        for (String itemSelect : plugins) {
-            itemSelect = itemSelect.split("\\.")[0];
-            listaFactory.add(itemSelect);
-            try {
-                jars[index++] = (new File("./plugins/" + itemSelect + ".jar")).toURL();
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(AbstractFactoryCar.class.getName()).log(Level.SEVERE, null, ex);
+        List<Class> listaFabricas = new ArrayList<>();
+        List<Class> listaCreators = new ArrayList<>();
+        PluginLoader pluginLoader = PluginLoader.getInstance();
+        List<String> listaAvisos = pluginLoader.pluginRefresh(selecionarDiretorio());
+        for (String listaAviso : listaAvisos) {
+            append(listaAviso);
+        }
+        List<Class> listaPlugins = pluginLoader.getListaPlugins();
+        for (Class plugin : listaPlugins) {
+            if(plugin.getTypeName().contains("Factory")) {
+                listaFabricas.add(plugin);
+            } else if(plugin.getTypeName().contains("creator")) {
+                listaCreators.add(plugin);
+            } else {
+                append("O plugin " + plugin.getClass().getSimpleName() + " é desconhecido e não foi adicionado!");
             }
         }
-        URLClassLoader ulc = new URLClassLoader(jars);
-        List<ICarModelFactory> listaFabricas = new ArrayList<>();
-        List<ICreator> listaCreators = new ArrayList<>();
-        for (String factoryName : listaFactory) {
-            ICarModelFactory factory;
-            ICreator garagemCreator;
-            try {
-                Object plugin = Class.forName(factoryName.toLowerCase() + "." + factoryName, true, ulc).newInstance(); 
-                if(plugin instanceof ICarModelFactory) {
-                    factory = (ICarModelFactory) plugin;
-                    listaFabricas.add(factory);
-                } else if(plugin instanceof ICreator) {
-                    garagemCreator = (ICreator) plugin;
-                    listaCreators.add(garagemCreator);
-                } else {
-                    append("O plugin " + factoryName + " é desconhecido e não foi adicionado!");
-                }
-            
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-                append("O plugin " + factoryName + " é desconhecido e não foi adicionado!");
-                //Logger.getLogger(AbstractFactoryCar.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        setModelSelectFactory(listaFabricas);
-        setModelSelectCreator(listaCreators);
-        //garagem = (IGaragem)listaCreators.get(0).criarGaragem();
-        //garagem = garagem.getClass().newInstance();
+        comboTipoCarro.setModel(new javax.swing.DefaultComboBoxModel<>(pluginLoader.getModelSelect(listaFabricas, Boolean.TRUE)));
+        comboTipoGaragem.setModel(new javax.swing.DefaultComboBoxModel<>(pluginLoader.getModelSelect(listaCreators, Boolean.TRUE)));
     }
     
     private void atualizarFactory() {
@@ -369,12 +367,37 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
         if(qtdeCreator > 0) {
             qtdeCreator--;
         }
-        if(verificarNovosPlugins(qtdeFactoryCarro + qtdeCreator)) {
-            append("Atualizando plugins...");
-            refreshFactory();
+        append("Atualizando plugins...");
+        refreshFactory();
+    }
+    
+    public Object create(String nome) {
+        return listaPrototypes.get(nome).clone();
+    }
+    
+    public Boolean adicionar(String nome, IPrototype prototype) {
+        Boolean adiciona = Boolean.TRUE;
+        if(listaPrototypes == null) {
+            listaPrototypes = new HashMap<>();
+        }
+        if(listaPrototypes.containsValue(prototype)) {
+            adiciona = Boolean.FALSE;
         } else {
-            append("Não há novos plugins.");
-        }    
+            listaPrototypes.put(prototype.toString(), prototype);
+        }
+        return adiciona;
+    }
+    
+    public Boolean remover(IPrototype prototype) {
+        Boolean remove = Boolean.TRUE;
+        if(listaPrototypes != null) {
+            if(listaPrototypes.containsValue(prototype)) {
+                remove = Boolean.FALSE;
+            } else {
+                listaPrototypes.remove(prototype.toString());
+            }
+        }
+        return remove;
     }
     /**
      * @param args the command line arguments
@@ -394,6 +417,7 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
     private javax.swing.JButton btnAbrirTeto;
     private javax.swing.JButton btnAlinharRoda;
     private javax.swing.JButton btnCriarCarro;
+    private javax.swing.JButton btnCriarPrototype;
     private javax.swing.JButton btnEstacionar;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnTocarSom;
@@ -403,5 +427,6 @@ public class AbstractFactoryCar extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTipoCarro;
     private javax.swing.JLabel lblTipoGaragem;
+    private javax.swing.JFileChooser seletor;
     // End of variables declaration//GEN-END:variables
 }
